@@ -25,8 +25,13 @@ def volume(filename,
     t = np.linspace(0.0, 7.2e4, nbins + 1)
     z, xe, ye = np.histogram2d(ids, tofs, bins=[np.arange(nx * ny + 1), t])
     z = np.transpose(z.reshape(nx, ny, nbins), axes=[2, 1, 0])
-
-    ipv.quickvolshow(z)
+    ipv.quickvolshow(z,
+        extent=[[x[0, 0]*100.0, x[0, -1]*100.0],
+                [y[0, 0]*100.0, y[-1, 0]*100.0],
+                [t[0], t[-1]]])
+    ipv.pylab.xlabel("x [cm]")
+    ipv.pylab.ylabel("y [cm]")
+    ipv.pylab.zlabel("Tof [us]")
     ipv.show()
 
     return
