@@ -23,4 +23,13 @@ dv.x_vs_tof(filename)
 
 # Open a slicer plot that allows to navigate the tof dimension with mouse wheel
 dv.slicer(filename)
+
+# Specify the paths in nexus/hdf file
+dv.slicer(fname, vmax=5,
+    id_path="/entry/instrument/detector_1/raw_event_data/event_id",
+    tof_path="/entry/instrument/detector_1/raw_event_data/event_time_offset")
+
+# 3D volume rendering (x, y, tof)
+# (only available in jupyter notebook, requires ipyvolume)
+dv.volume(fname)
 ```

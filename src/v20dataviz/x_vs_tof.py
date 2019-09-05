@@ -11,7 +11,8 @@ def x_vs_tof(filename,
           vmax=None,
           log=False,
           nbins=512,
-          save=None):
+          save=None,
+          transpose=False):
     """
     Make a x vs tof image
     """
@@ -28,7 +29,7 @@ def x_vs_tof(filename,
         t = np.linspace(0.0, 7.2e4, nbins + 1)
         z, xe, ye = np.histogram2d(ids, tofs, bins=[np.arange(nx * ny + 1), t])
         z = z.reshape(nx, ny, nbins)
-        z = np.sum(z, axis=1)
+        z = np.sum(z, axis=int(transpose==True))
         if log:
             z = np.log10(z)
 

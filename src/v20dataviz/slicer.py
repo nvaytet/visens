@@ -45,7 +45,8 @@ def slicer(filename,
            vmin=None,
            vmax=None,
            log=False,
-           nbins=256):
+           nbins=256,
+           transpose=False):
     """
     Make a 2D image viewer with mouse wheel to scroll in the Tof dimension
     """
@@ -62,7 +63,10 @@ def slicer(filename,
     nx, ny = np.shape(x)
     t = np.linspace(0.0, 7.2e4, nbins + 1)
     z, xe, ye = np.histogram2d(ids, tofs, bins=[np.arange(nx * ny + 1), t])
-    z = np.transpose(z.reshape(nx, ny, nbins), axes=[1, 0, 2])
+    z = z.reshape(nx, ny, nbins)
+    # This is for old December 2018 files
+    if transpose:
+        z = np.transpose(z, axes=[1, 0, 2])
     if log:
         z = np.log10(z)
 
