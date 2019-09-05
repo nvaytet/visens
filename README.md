@@ -2,7 +2,7 @@
 
 Data visualization scripts for v20
 
-# Usage:
+### Usage:
 
 ```Python
 import v20dataviz as dv
