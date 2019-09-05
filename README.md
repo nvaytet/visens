@@ -2,6 +2,12 @@
 
 Data visualization scripts for v20
 
+### Setup:
+
+```
+export PYTHONPATH=/path/to/v20dataviz/src
+```
+
 ### Usage:
 
 ```Python
