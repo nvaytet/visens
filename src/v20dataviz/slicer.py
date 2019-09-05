@@ -16,8 +16,6 @@ class Slicer(object):
         self.dt = dt
         rows, cols, self.slices = X.shape
         self.ind = 0
-        self.ax.set_title("slice {}: Tof = {} us".format(
-          self.ind, self.tof[self.ind]))
 
         self.im = ax.imshow(self.X[:, :, self.ind], origin="lower",
                             aspect="equal", interpolation="none",
@@ -51,7 +49,7 @@ class Slicer(object):
         """
         self.ind = int(round(val/self.dt))
         self.im.set_data(self.X[:, :, self.ind])
-        self.ax.set_title("slice {}".format(self.ind))
+        # self.ax.set_title("slice {}".format(self.ind))
 
 
 def slicer(filename,
@@ -85,9 +83,11 @@ def slicer(filename,
     if transpose:
         z = np.transpose(z, axes=[1, 0, 2])
     if log:
-        z = np.log10(z)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            z = np.log10(z)
 
     fig, ax = plt.subplots(1, 1)
+    ax.set_title(filename.split("/")[-1])
     sl = Slicer(fig, ax, z, 0.5*(t[1:] + t[:-1]), dt=t[1]-t[0],
                 vmin=vmin, vmax=vmax,
                 extent=[x[0, 0], x[0, -1], y[0, 0], y[-1, 0]])
