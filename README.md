@@ -35,13 +35,6 @@ dv.slicer(file2)
 ```
 ![slicer.png](https://github.com/nvaytet/v20dataviz/raw/master/docs/images/slicer.png)
 ```Python
-# Specify the paths in nexus/hdf file
-dv.slicer(file2, vmax=5,
-    id_path="/entry/instrument/detector_1/raw_event_data/event_id",
-    tof_path="/entry/instrument/detector_1/raw_event_data/event_time_offset")
-```
-
-```Python
 # 3D volume rendering (x, y, tof)
 # (only available in jupyter notebook, requires ipyvolume)
 dv.volume(file1)
