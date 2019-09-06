@@ -1,6 +1,5 @@
 import h5py
 import numpy as np
-import ipyvolume as ipv
 
 
 def volume(filename,
@@ -11,6 +10,8 @@ def volume(filename,
     """
     Make a 3D volume rendering using ipyvolume
     """
+
+    import ipyvolume as ipv
 
     with h5py.File(filename, "r") as f:
 
