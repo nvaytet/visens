@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 def image(filename,
-          entry="/entry/event_data/event_id",
+          id_path="/entry/event_data/event_id",
           colormap="viridis",
           vmin=None,
           vmax=None,
@@ -16,7 +16,7 @@ def image(filename,
 
     with h5py.File(filename, "r") as f:
 
-        ids = np.array(f[entry][...], dtype=np.int32, copy=True)
+        ids = np.array(f[id_path][...], dtype=np.int32, copy=True)
         x = np.array(f["/entry/instrument/detector_1/x_pixel_offset"][...],
                      dtype=np.float64, copy=True)
         y = np.array(f["/entry/instrument/detector_1/y_pixel_offset"][...],
