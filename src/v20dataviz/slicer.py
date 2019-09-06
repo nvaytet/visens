@@ -22,6 +22,7 @@ class Slicer(object):
                             vmin=vmin, vmax=vmax, extent=extent)
         self.cb = plt.colorbar(self.im, ax=self.ax)
         self.cb.ax.set_ylabel("Counts")
+        self.fig.canvas.mpl_connect('scroll_event', self.onscroll)
 
         # Add mpl slider widget
         self.ax_slider = self.fig.add_axes([0.23, 0.02, 0.56, 0.04])
@@ -50,6 +51,7 @@ class Slicer(object):
         self.ind = int(round(val/self.dt))
         self.im.set_data(self.X[:, :, self.ind])
         # self.ax.set_title("slice {}".format(self.ind))
+
 
 
 def slicer(filename,
@@ -91,5 +93,5 @@ def slicer(filename,
     sl = Slicer(fig, ax, z, 0.5*(t[1:] + t[:-1]), dt=t[1]-t[0],
                 vmin=vmin, vmax=vmax,
                 extent=[x[0, 0], x[0, -1], y[0, 0], y[-1, 0]])
-    fig.canvas.mpl_connect('scroll_event', sl.onscroll)
     plt.show()
+    return sl
