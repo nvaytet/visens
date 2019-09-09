@@ -1,29 +1,18 @@
-import h5py
 import numpy as np
 import matplotlib.pyplot as plt
+from .load import load
 
 
-def image(filename,
-          id_path="/entry/event_data/event_id",
-          colormap="viridis",
-          vmin=None,
-          vmax=None,
-          log=False,
+def image(filename, colormap="viridis", vmin=None, vmax=None, log=False,
           save=None):
     """
     Make a 2D image of the detector counts
     """
 
-    with h5py.File(filename, "r") as f:
+    data = load(filename, ids=True)
 
-        ids = np.array(f[id_path][...], dtype=np.int32, copy=True)
-        x = np.array(f["/entry/instrument/detector_1/x_pixel_offset"][...],
-                     dtype=np.float64, copy=True)
-        y = np.array(f["/entry/instrument/detector_1/y_pixel_offset"][...],
-                     dtype=np.float64, copy=True)
-
-    nx, ny = np.shape(x)
-    z, edges = np.histogram(ids, bins=np.arange(nx * ny + 1))
+    nx, ny = np.shape(data.x)
+    z, edges = np.histogram(data.ids, bins=np.arange(nx * ny + 1))
     z = z.reshape(nx, ny)
     if log:
         with np.errstate(divide="ignore", invalid="ignore"):
@@ -32,8 +21,8 @@ def image(filename,
     fig = plt.figure()
     ax = fig.add_subplot(111)
     im = ax.imshow(z, origin="lower", aspect="equal", interpolation="none",
-                   vmin=vmin, vmax=vmax,
-                   extent=[x[0, 0], x[0, -1], y[0, 0], y[-1, 0]])
+                   vmin=vmin, vmax=vmax, extent=[data.x[0, 0], data.x[0, -1],
+                                                 data.y[0, 0], data.y[-1, 0]])
     cb = plt.colorbar(im, ax=ax)
     cb.ax.set_ylabel("Counts")
     ax.set_xlabel("x position [m]")
