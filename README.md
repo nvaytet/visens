@@ -1,17 +1,17 @@
-# v20dataviz
+# VISENS
 
-Data visualization scripts for v20
+**VIS**ualization for **E**SS **N**eutron **S**cience
 
 ### Setup:
 
 ```
-export PYTHONPATH=/path/to/v20dataviz/src:$PYTHONPATH
+export PYTHONPATH=/path/to/visens/src:$PYTHONPATH
 ```
 
 ### Usage:
 
 ```Python
-import v20dataviz as dv
+import visens as vs
 
 # Diffraction experiment
 file1 = "V20_ESSIntegration_2018-12-13_0942_stripped.nxs"
@@ -21,22 +21,22 @@ file2 = "nicos_00000447_agg_with_monitor.nxs"
 
 ```Python
 # Plot a 2D image of the integrated detector counts
-dv.image(file2)
+vs.image(file2)
 ```
 ![image.png](https://github.com/nvaytet/v20dataviz/raw/master/docs/images/image.png)
 ```Python
 # Plot a x versus time-of-flight diagram
-dv.x_vs_tof(file1)
+vs.x_vs_tof(file1)
 ```
 ![x_vs_tof.png](https://github.com/nvaytet/v20dataviz/raw/master/docs/images/x_vs_tof.png)
 ```Python
 # Open a slicer plot that allows to navigate the tof dimension with mouse wheel
-dv.slicer(file2)
+vs.slicer(file2)
 ```
 ![slicer.png](https://github.com/nvaytet/v20dataviz/raw/master/docs/images/slicer.png)
 ```Python
 # 3D volume rendering (x, y, tof)
 # (only available in jupyter notebook, requires ipyvolume)
-dv.volume(file1)
+vs.volume(file1)
 ```
 ![volume.png](https://github.com/nvaytet/v20dataviz/raw/master/docs/images/volume.png)
