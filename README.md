@@ -2,10 +2,10 @@
 
 **VIS**ualization for **E**SS **N**eutron **S**cience
 
-### Setup:
+### Installation:
 
 ```
-export PYTHONPATH=/path/to/visens/src:$PYTHONPATH
+pip install visens
 ```
 
 ### Usage:
