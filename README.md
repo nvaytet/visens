@@ -4,7 +4,7 @@
 <h1>VISENS</h1>
 <b>VIS</b>ualization for <b>E</b>SS <b>N</b>eutron <b>S</b>cience
 </td>
-<td><img src="https://github.com/nvaytet/visens/blob/master/docs/images/visens_logo.png" width="200" /></td>
+<td><img src="https://raw.githubusercontent.com/nvaytet/visens/master/docs/images/visens_logo.png" width="200" /></td>
 </tr>
 </table>
 
