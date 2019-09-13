@@ -4,19 +4,19 @@ from .load import load
 
 
 def x_vs_tof(filename, colormap="viridis", vmin=None, vmax=None, log=False,
-             nbins=512, save=None, transpose=False):
+             nbins=512, save=None, transpose=False, **kwargs):
     """
     Make a x vs tof image
     """
 
-    data = load(filename, ids=True, tofs=True)
+    data = load(filename, ids=True, tofs=True, **kwargs)
 
-    nx, ny = np.shape(data.x)
     t = np.linspace(0.0, 7.2e4, nbins + 1)
     z, xe, ye = np.histogram2d(data.ids, data.tofs/1.0e3,
-                               bins=[np.arange(nx * ny + 1), t])
-    z = z.reshape(nx, ny, nbins)
-    z = np.sum(z, axis=int(transpose==True))
+                               bins=[np.arange(-0.5, data.nx * data.ny + 0.5),
+                                     t])
+    z = z.reshape(data.nx, data.ny, nbins)
+    z = np.sum(z, axis=int(transpose))
     if log:
         with np.errstate(divide="ignore", invalid="ignore"):
             z = np.log10(z)
@@ -32,7 +32,6 @@ def x_vs_tof(filename, colormap="viridis", vmin=None, vmax=None, log=False,
     ax.set_ylabel("x position [m]")
     ax.set_title(filename.split("/")[-1])
     if save is not None:
-        extension = "." + f.split(".")[-1]
-        fig.savefig(f.replace(extension, ".pdf"), bbox_inches="tight")
+        fig.savefig(save, bbox_inches="tight")
     else:
         plt.show()

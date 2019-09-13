@@ -15,7 +15,8 @@ class NxsData:
         return
 
 
-def load(filename, ids=False, tofs=False, entry="/", verbose=False):
+def load(filename, ids=False, tofs=False, entry="/", verbose=False,
+         convert_ids=True):
     """
     Load a hdf/nxs file and return required information.
     Note that the patterns are listed in order of preference,
@@ -62,12 +63,30 @@ def load(filename, ids=False, tofs=False, entry="/", verbose=False):
                                            dtype=fields[key]["dtype"],
                                            copy=True)
 
+    # Store the detector size in pixels
+    nx, ny = np.shape(fields["x"]["data"])
+    fields["nx"] = {"entry": None, "data": nx}
+    fields["ny"] = {"entry": None, "data": ny}
+
+    if ids and convert_ids and (np.amax(fields["ids"]["data"]) >= nx*ny):
+        fields["ids"]["data"] = __convert_id(fields["ids"]["data"], nx)
+
     if verbose:
         for key in fields.keys():
             print("Loaded {} from: {}".format(key, fields[key]["entry"]))
             print("  - Data size: {} : Min={} , "
-                  "Max={}".format(len(fields[key]["data"]),
+                  "Max={}".format(np.shape(fields[key]["data"]),
                                   np.amin(fields[key]["data"]),
                                   np.amax(fields[key]["data"])))
 
     return NxsData(fields)
+
+
+def __convert_id(ids, nx, id_offset=0):
+    """
+    Attempt to convert the event ids if their range exceeds the maximum index
+    allowed by the pixel geometry.
+    """
+    x = np.bitwise_and(ids, 0xFFFF)
+    y = np.right_shift(ids, 16)
+    return id_offset + x + (nx * y)

@@ -5,6 +5,7 @@ from .load import load
 
 
 class Slicer(object):
+
     def __init__(self, fig, ax, X, tof, dt=0.0, vmin=None, vmax=None,
                  extent=None):
         self.fig = fig
@@ -23,15 +24,12 @@ class Slicer(object):
                             vmin=vmin, vmax=vmax, extent=extent)
         self.cb = plt.colorbar(self.im, ax=self.ax)
         self.cb.ax.set_ylabel("Counts")
-        self.fig.canvas.mpl_connect('scroll_event', self.onscroll)
+        self.fig.canvas.mpl_connect("scroll_event", self.onscroll)
 
         # Add mpl slider widget
         self.ax_slider = self.fig.add_axes([0.23, 0.02, 0.56, 0.04])
-        self.slider = Slider(self.ax_slider,
-            'Tof [us]',
-            tof.min(),
-            tof.max(),
-            valinit=tof.min())
+        self.slider = Slider(self.ax_slider, "Tof [us]", tof.min(), tof.max(),
+                             valinit=tof.min())
         # Connect slider to function
         self.slider.on_changed(self.update)
 
@@ -39,7 +37,7 @@ class Slicer(object):
         """
         Allow moving the slider with the mouse wheel
         """
-        if event.button == 'up':
+        if event.button == "up":
             self.ind = np.clip(self.ind + 1, 0, self.slices - 1)
         else:
             self.ind = np.clip(self.ind - 1, 0, self.slices - 1)
@@ -54,21 +52,20 @@ class Slicer(object):
         # self.ax.set_title("slice {}".format(self.ind))
 
 
-
 def slicer(filename, colormap="viridis", vmin=None, vmax=None, log=False,
-           nbins=256, transpose=False):
+           nbins=256, transpose=False, **kwargs):
     """
     Make a 2D image viewer with a slider to navigate in the Tof dimension.
     You can also scroll with the mouse wheel to change the slider position.
     """
 
-    data = load(filename, ids=True, tofs=True)
+    data = load(filename, ids=True, tofs=True, **kwargs)
 
-    nx, ny = np.shape(data.x)
     t = np.linspace(0.0, 7.2e4, nbins + 1)
     z, xe, ye = np.histogram2d(data.ids, data.tofs/1.0e3,
-                               bins=[np.arange(nx * ny + 1), t])
-    z = z.reshape(nx, ny, nbins)
+                               bins=[np.arange(-0.5, data.nx * data.ny + 0.5),
+                                     t])
+    z = z.reshape(data.nx, data.ny, nbins)
     # Transpose should be True for old December 2018 files
     if transpose:
         z = np.transpose(z, axes=[1, 0, 2])
