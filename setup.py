@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="visens",
-    version="0.0.7",
+    version="0.0.8",
     author="Neil Vaytet",
     author_email="neil.vaytet@esss.se",
     description="VISualization for Ess Neutron Science",
@@ -24,6 +24,5 @@ setuptools.setup(
         "matplotlib",
         "numpy",
         "h5py",
-        "ipyvolume",
     ],
 )

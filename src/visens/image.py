@@ -14,9 +14,11 @@ def image(filename, colormap="viridis", vmin=None, vmax=None, log=False,
     z, edges = np.histogram(data.ids,
                             bins=np.arange(-0.5, data.nx * data.ny + 0.5))
     z = z.reshape(data.nx, data.ny)
+    clab = "Counts"
     if log:
         with np.errstate(divide="ignore", invalid="ignore"):
             z = np.log10(z)
+        clab = "log({})".format(clab)
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -24,7 +26,7 @@ def image(filename, colormap="viridis", vmin=None, vmax=None, log=False,
                    vmin=vmin, vmax=vmax, extent=[data.x[0, 0], data.x[0, -1],
                                                  data.y[0, 0], data.y[-1, 0]])
     cb = plt.colorbar(im, ax=ax)
-    cb.ax.set_ylabel("Counts")
+    cb.ax.set_ylabel(clab)
     ax.set_xlabel("x position [m]")
     ax.set_ylabel("y position [m]")
     ax.set_title(filename.split("/")[-1])

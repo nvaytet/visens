@@ -1,3 +1,4 @@
+from .tof import tof
 from .image import image
 from .x_vs_tof import x_vs_tof
 from .slicer import slicer

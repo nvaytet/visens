@@ -17,9 +17,11 @@ def x_vs_tof(filename, colormap="viridis", vmin=None, vmax=None, log=False,
                                      t])
     z = z.reshape(data.nx, data.ny, nbins)
     z = np.sum(z, axis=int(transpose))
+    clab = "Counts"
     if log:
         with np.errstate(divide="ignore", invalid="ignore"):
             z = np.log10(z)
+        clab = "log({})".format(clab)
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -27,7 +29,7 @@ def x_vs_tof(filename, colormap="viridis", vmin=None, vmax=None, log=False,
                    vmin=vmin, vmax=vmax,
                    extent=[t[0], t[-1], data.x[0, 0], data.x[0, -1]])
     cb = plt.colorbar(im, ax=ax)
-    cb.ax.set_ylabel("Counts")
+    cb.ax.set_ylabel(clab)
     ax.set_xlabel("Time-of-flight [microseconds]")
     ax.set_ylabel("x position [m]")
     ax.set_title(filename.split("/")[-1])

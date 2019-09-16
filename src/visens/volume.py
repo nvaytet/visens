@@ -7,7 +7,11 @@ def volume(filename, colormap="viridis", nbins=256, **kwargs):
     Make a 3D volume rendering using ipyvolume
     """
 
-    import ipyvolume as ipv
+    try:
+        import ipyvolume as ipv
+    except ImportError:
+        print("Volume rendering makes use of the ipyvolume package which was "
+              "not found on this system. Install using pip install ipyvolume.")
 
     data = load(filename, ids=True, tofs=True, **kwargs)
 

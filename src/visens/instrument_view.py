@@ -1,6 +1,5 @@
 import h5py
 import numpy as np
-import ipyvolume as ipv
 from matplotlib import cm
 
 
@@ -12,6 +11,13 @@ def instrument_view(filename,
     """
     Make a 3D instrument view using ipyvolume
     """
+
+    try:
+        import ipyvolume as ipv
+    except ImportError:
+        print("Instrument view makes use of the ipyvolume package which was "
+              "not found on this system. Install using pip install ipyvolume.")
+
 
     with h5py.File(filename, "r") as f:
 

@@ -6,7 +6,7 @@ from .load import load
 
 class Slicer(object):
 
-    def __init__(self, fig, ax, X, tof, dt=0.0, vmin=None, vmax=None,
+    def __init__(self, fig, ax, X, tof, clab="", dt=0.0, vmin=None, vmax=None,
                  extent=None):
         self.fig = fig
         self.ax = ax
@@ -23,7 +23,7 @@ class Slicer(object):
                             aspect="equal", interpolation="none",
                             vmin=vmin, vmax=vmax, extent=extent)
         self.cb = plt.colorbar(self.im, ax=self.ax)
-        self.cb.ax.set_ylabel("Counts")
+        self.cb.ax.set_ylabel(clab)
         self.fig.canvas.mpl_connect("scroll_event", self.onscroll)
 
         # Add mpl slider widget
@@ -69,13 +69,15 @@ def slicer(filename, colormap="viridis", vmin=None, vmax=None, log=False,
     # Transpose should be True for old December 2018 files
     if transpose:
         z = np.transpose(z, axes=[1, 0, 2])
+    clab = "Counts"
     if log:
         with np.errstate(divide="ignore", invalid="ignore"):
             z = np.log10(z)
+        clab = "log({})".format(clab)
 
     fig, ax = plt.subplots(1, 1)
     ax.set_title(filename.split("/")[-1])
-    sl = Slicer(fig, ax, z, 0.5*(t[1:] + t[:-1]), dt=t[1]-t[0],
+    sl = Slicer(fig, ax, z, 0.5*(t[1:] + t[:-1]), clab=clab, dt=t[1]-t[0],
                 vmin=vmin, vmax=vmax, extent=[data.x[0, 0], data.x[0, -1],
                                               data.y[0, 0], data.y[-1, 0]])
     plt.show()
