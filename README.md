@@ -20,23 +20,28 @@ file2 = "nicos_00000447_agg_with_monitor.nxs"
 ```
 
 ```Python
+# Plot a 1D histogram of the integrated detector counts vs time-of-flight
+vs.tof(file2)
+```
+![image.png](https://github.com/nvaytet/visens/raw/master/docs/images/tof.png)
+```Python
 # Plot a 2D image of the integrated detector counts
 vs.image(file2)
 ```
-![image.png](https://github.com/nvaytet/v20dataviz/raw/master/docs/images/image.png)
+![image.png](https://github.com/nvaytet/visens/raw/master/docs/images/image.png)
 ```Python
 # Plot a x versus time-of-flight diagram
 vs.x_vs_tof(file1)
 ```
-![x_vs_tof.png](https://github.com/nvaytet/v20dataviz/raw/master/docs/images/x_vs_tof.png)
+![x_vs_tof.png](https://github.com/nvaytet/visens/raw/master/docs/images/x_vs_tof.png)
 ```Python
 # Open a slicer plot that allows to navigate the tof dimension with mouse wheel
 vs.slicer(file2)
 ```
-![slicer.png](https://github.com/nvaytet/v20dataviz/raw/master/docs/images/slicer.png)
+![slicer.png](https://github.com/nvaytet/visens/raw/master/docs/images/slicer.png)
 ```Python
 # 3D volume rendering (x, y, tof)
 # (only available in jupyter notebook, requires ipyvolume)
 vs.volume(file1)
 ```
-![volume.png](https://github.com/nvaytet/v20dataviz/raw/master/docs/images/volume.png)
+![volume.png](https://github.com/nvaytet/visens/raw/master/docs/images/volume.png)
