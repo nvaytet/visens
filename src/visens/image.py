@@ -41,7 +41,7 @@ def image(filename, colormap="viridis", vmin=None, vmax=None, log=False,
     else:
         ax2 = fig.add_axes([imstart + imsize + cbsize, imstart, cbsize, imsize])
 
-    im = ax1.imshow(z, origin="lower", aspect="equal", interpolation="none",
+    im = ax1.imshow(z, origin="lower", aspect="auto", interpolation="none",
                     vmin=vmin, vmax=vmax, extent=[data.x[0, 0], data.x[0, -1],
                                                   data.y[0, 0], data.y[-1, 0]])
 
@@ -53,13 +53,10 @@ def image(filename, colormap="viridis", vmin=None, vmax=None, log=False,
         cb.ax.set_ylabel(clab)
     ax1.set_xlabel("x position [m]")
     ax1.set_ylabel("y position [m]")
-    ax1.set_title(filename.split("/")[-1], y=ytitle,
-                  bbox=dict(facecolor="none", edgecolor="grey",
-                            boxstyle="round"))
 
     if side_panels:
-        ax3 = fig.add_axes([imstart, imstart + imsize, imsize, plsize])
-        ax4 = fig.add_axes([imstart + imsize, imstart, plsize, imsize])
+        ax3 = fig.add_axes([imstart, imstart + imsize, imsize, plsize], sharex=ax1)
+        ax4 = fig.add_axes([imstart + imsize, imstart, plsize, imsize], sharey=ax1)
         ax3.grid(True, color="lightgray", linestyle="dotted")
         ax4.grid(True, color="lightgray", linestyle="dotted")
         ax3.set_axisbelow(True)
@@ -81,6 +78,13 @@ def image(filename, colormap="viridis", vmin=None, vmax=None, log=False,
         if side_panels == "log":
             ax3.set_yscale("log", nonposy="clip")
             ax4.set_xscale("log", nonposx="clip")
+        ax3.set_title(filename.split("/")[-1], y=ytitle,
+                      bbox=dict(facecolor="none", edgecolor="grey",
+                                boxstyle="round"))
+    else:
+        ax1.set_title(filename.split("/")[-1], y=ytitle,
+                      bbox=dict(facecolor="none", edgecolor="grey",
+                                boxstyle="round"))
 
     if save is not None:
         fig.savefig(save, bbox_inches="tight")

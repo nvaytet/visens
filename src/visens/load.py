@@ -69,6 +69,8 @@ def load(filename, ids=False, tofs=False, entry="/", verbose=False,
     fields["ny"] = {"entry": None, "data": ny}
 
     if ids and convert_ids and (np.amax(fields["ids"]["data"]) >= nx*ny):
+        print("Warning: maximum id exceeds total number of pixels. "
+              "Attempting to fix ids...")
         fields["ids"]["data"] = __convert_id(fields["ids"]["data"], nx)
 
     if verbose:

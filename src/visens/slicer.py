@@ -47,7 +47,7 @@ class Slicer(object):
         """
         Update the image with new data according to slider value
         """
-        self.ind = int(round(val/self.dt))
+        self.ind = np.clip(int(round(val/self.dt)), 0, self.slices - 1)
         self.im.set_data(self.X[:, :, self.ind])
         # self.ax.set_title("slice {}".format(self.ind))
 
