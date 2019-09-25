@@ -19,7 +19,7 @@ def volume(filename, colormap="viridis", nbins=256, **kwargs):
     z, xe, ye = np.histogram2d(data.ids, data.tofs/1.0e3,
                                bins=[np.arange(-0.5, data.nx * data.ny + 0.5),
                                      t])
-    z = np.transpose(z.reshape(data.nx, data.ny, nbins), axes=[2, 1, 0])
+    z = np.transpose(z.reshape(data.ny, data.nx, nbins), axes=[2, 1, 0])
     ipv.quickvolshow(z, extent=[[data.x[0, 0]*100.0, data.x[0, -1]*100.0],
                                 [data.y[0, 0]*100.0, data.y[-1, 0]*100.0],
                                 [t[0], t[-1]]])

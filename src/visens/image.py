@@ -13,7 +13,7 @@ def image(filename, colormap="viridis", vmin=None, vmax=None, log=False,
 
     z, edges = np.histogram(data.ids,
                             bins=np.arange(-0.5, data.nx * data.ny + 0.5))
-    z = z.reshape(data.nx, data.ny)
+    z = z.reshape(data.ny, data.nx)
     if side_panels:
         z_sumx = np.sum(z, axis=1)
         z_sumy = np.sum(z, axis=0)

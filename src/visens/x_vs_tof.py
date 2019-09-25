@@ -15,7 +15,7 @@ def x_vs_tof(filename, colormap="viridis", vmin=None, vmax=None, log=False,
     z, xe, ye = np.histogram2d(data.ids, data.tofs/1.0e3,
                                bins=[np.arange(-0.5, data.nx * data.ny + 0.5),
                                      t])
-    z = z.reshape(data.nx, data.ny, nbins)
+    z = z.reshape(data.ny, data.nx, nbins)
     z = np.sum(z, axis=int(transpose))
     clab = "Counts"
     if log:

@@ -65,7 +65,7 @@ def slicer(filename, colormap="viridis", vmin=None, vmax=None, log=False,
     z, xe, ye = np.histogram2d(data.ids, data.tofs/1.0e3,
                                bins=[np.arange(-0.5, data.nx * data.ny + 0.5),
                                      t])
-    z = z.reshape(data.nx, data.ny, nbins)
+    z = z.reshape(data.ny, data.nx, nbins)
     # Transpose should be True for old December 2018 files
     if transpose:
         z = np.transpose(z, axes=[1, 0, 2])
