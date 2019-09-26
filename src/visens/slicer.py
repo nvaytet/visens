@@ -2,32 +2,40 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 from .load import load
-
+from .image import ImageViewer
 
 class Slicer(object):
 
-    def __init__(self, fig, ax, X, tof, clab="", dt=0.0, vmin=None, vmax=None,
-                 extent=None):
-        self.fig = fig
-        self.ax = ax
-        self.ax.set_xlabel("x position [m]")
-        self.ax.set_ylabel("y position [m]")
+    def __init__(self, x, y, z, tof, dt=0.0, filename="", colormap="viridis",
+                 vmin=None, vmax=None, log=False, side_panels=True, clab=""):
 
-        self.X = X
-        self.tof = tof
-        self.dt = dt
-        rows, cols, self.slices = X.shape
+        # Initial index
         self.ind = 0
 
-        self.im = ax.imshow(self.X[:, :, self.ind], origin="lower",
-                            aspect="equal", interpolation="none",
-                            vmin=vmin, vmax=vmax, extent=extent)
-        self.cb = plt.colorbar(self.im, ax=self.ax)
-        self.cb.ax.set_ylabel(clab)
-        self.fig.canvas.mpl_connect("scroll_event", self.onscroll)
+        # Use ImageViewer class
+        self.imv = ImageViewer(x, y, z[:, :, self.ind], filename=filename,
+                      colormap=colormap, vmin=vmin, vmax=vmax, log=log,
+                      side_panels=side_panels, clab=clab, imstart=0.12)
+
+        self.x = x
+        self.y = y
+        self.z = z
+        self.tof = tof
+        self.dt = dt
+        self.nslices = z.shape[-1]
+
+        # Set limits
+        if self.imv.side_panels:
+            self.z_sumy = np.sum(z, axis=0)
+            self.z_sumx = np.sum(z, axis=1)
+            self.imv.ax3.set_ylim(top=np.nanmax(self.z_sumy))
+            self.imv.ax4.set_xlim(right=np.nanmax(self.z_sumx))
+
+        # Connect canvas to scroll
+        self.imv.fig.canvas.mpl_connect("scroll_event", self.onscroll)
 
         # Add mpl slider widget
-        self.ax_slider = self.fig.add_axes([0.23, 0.02, 0.56, 0.04])
+        self.ax_slider = self.imv.fig.add_axes([0.23, 0.02, 0.56, 0.03])
         self.slider = Slider(self.ax_slider, "Tof [us]", tof.min(), tof.max(),
                              valinit=tof.min())
         # Connect slider to function
@@ -38,22 +46,24 @@ class Slicer(object):
         Allow moving the slider with the mouse wheel
         """
         if event.button == "up":
-            self.ind = np.clip(self.ind + 1, 0, self.slices - 1)
+            self.ind = np.clip(self.ind + 1, 0, self.nslices - 1)
         else:
-            self.ind = np.clip(self.ind - 1, 0, self.slices - 1)
+            self.ind = np.clip(self.ind - 1, 0, self.nslices - 1)
         self.slider.set_val(self.ind * self.dt)
 
     def update(self, val=None):
         """
         Update the image with new data according to slider value
         """
-        self.ind = np.clip(int(round(val/self.dt)), 0, self.slices - 1)
-        self.im.set_data(self.X[:, :, self.ind])
-        # self.ax.set_title("slice {}".format(self.ind))
+        self.ind = np.clip(int(round(val/self.dt)), 0, self.nslices - 1)
+        self.imv.im.set_data(self.z[:, :, self.ind])
+        if self.imv.side_panels:
+            self.imv.plot_x.set_data(self.x, self.z_sumy[:, self.ind])
+            self.imv.plot_y.set_data(self.z_sumx[:, self.ind], self.y)
 
 
 def slicer(filename, colormap="viridis", vmin=None, vmax=None, log=False,
-           nbins=256, transpose=False, **kwargs):
+           nbins=256, transpose=False, side_panels=True, **kwargs):
     """
     Make a 2D image viewer with a slider to navigate in the Tof dimension.
     You can also scroll with the mouse wheel to change the slider position.
@@ -69,16 +79,12 @@ def slicer(filename, colormap="viridis", vmin=None, vmax=None, log=False,
     # Transpose should be True for old December 2018 files
     if transpose:
         z = np.transpose(z, axes=[1, 0, 2])
-    clab = "Counts"
-    if log:
-        with np.errstate(divide="ignore", invalid="ignore"):
-            z = np.log10(z)
-        clab = "log({})".format(clab)
 
-    fig, ax = plt.subplots(1, 1)
-    ax.set_title(filename.split("/")[-1])
-    sl = Slicer(fig, ax, z, 0.5*(t[1:] + t[:-1]), clab=clab, dt=t[1]-t[0],
-                vmin=vmin, vmax=vmax, extent=[data.x[0, 0], data.x[0, -1],
-                                              data.y[0, 0], data.y[-1, 0]])
-    plt.show()
+    # Create slicer object
+    sl = Slicer(data.x[0, :], data.y[:, 0], z, 0.5*(t[1:] + t[:-1]),
+                dt=t[1]-t[0], filename=filename, colormap=colormap, vmin=vmin,
+                vmax=vmax, log=log, side_panels=side_panels, clab="Counts")
+    # Assume we are always opening in interactive mode
+    sl.imv.fig.show()
+
     return sl
