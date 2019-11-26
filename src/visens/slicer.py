@@ -62,14 +62,15 @@ class Slicer(object):
             self.imv.plot_y.set_data(self.z_sumx[:, self.ind], self.y)
 
 
-def slicer(filename, colormap="viridis", vmin=None, vmax=None, log=False,
-           nbins=256, transpose=False, side_panels=True, **kwargs):
+def slicer(filename=None, data=None, colormap="viridis", vmin=None, vmax=None,
+           log=False, nbins=256, transpose=False, side_panels=True, **kwargs):
     """
     Make a 2D image viewer with a slider to navigate in the Tof dimension.
     You can also scroll with the mouse wheel to change the slider position.
     """
 
-    data = load(filename, ids=True, tofs=True, **kwargs)
+    if data is None:
+        data = load(filename, ids=True, tofs=True, **kwargs)
 
     t = np.linspace(0.0, 7.2e4, nbins + 1)
     z, xe, ye = np.histogram2d(data.ids, data.tofs/1.0e3,

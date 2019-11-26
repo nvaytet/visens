@@ -6,8 +6,9 @@ from .load import load
 
 class ImageViewer():
 
-    def __init__(self, x, y, z, filename="", colormap="viridis", vmin=None,
-                 vmax=None, log=False, side_panels=True, clab="", imstart=0.1):
+    def __init__(self, x, y, z, filename=None, colormap="viridis", vmin=None,
+                 vmax=None, log=False, side_panels=True, clab="", imstart=0.1,
+                 ax=None):
 
         cbsize = 0.02
         figend = 0.95
@@ -25,13 +26,17 @@ class ImageViewer():
 
         norm = LogNorm(vmin=vmin, vmax=vmax) if log else Normalize(vmin=vmin, vmax=vmax)
 
-        self.fig = plt.figure(figsize=(8, 8))
-        self.ax1 = self.fig.add_axes([imstart, imstart, imsize, imsize])
         self.side_panels = side_panels
-        if self.side_panels:
-            self.ax2 = self.fig.add_axes([1.0 - imstart, imstart, cbsize, imsize])
+        if ax is None:
+            self.fig = plt.figure(figsize=(8, 8))
+            self.ax1 = self.fig.add_axes([imstart, imstart, imsize, imsize])
+            if self.side_panels:
+                self.ax2 = self.fig.add_axes([1.0 - imstart, imstart, cbsize, imsize])
+            else:
+                self.ax2 = self.fig.add_axes([imstart + imsize + cbsize, imstart, cbsize, imsize])
         else:
-            self.ax2 = self.fig.add_axes([imstart + imsize + cbsize, imstart, cbsize, imsize])
+            self.ax1 = ax
+            self.ax2 = None
 
         self.im = self.ax1.imshow(z, origin="lower", aspect="auto", interpolation="none",
                                   norm=norm, extent=[x[0], x[-1], y[0], y[-1]])
@@ -74,20 +79,23 @@ class ImageViewer():
             self.ax3.set_title(filename.split("/")[-1], y=ytitle,
                                bbox=dict(facecolor="none", edgecolor="grey",
                                          boxstyle="round"))
-        else:
+        elif filename is not None:
             self.ax1.set_title(filename.split("/")[-1], y=ytitle,
                                bbox=dict(facecolor="none", edgecolor="grey",
                                          boxstyle="round"))
         return
 
 
-def image(filename, colormap="viridis", vmin=None, vmax=None, log=False,
-          side_panels=True, save=None, **kwargs):
+def image(filename=None, data=None, colormap="viridis", vmin=None, vmax=None,
+          log=False, side_panels=True, save=None, ax=None, **kwargs):
     """
     Make a 2D image of the detector counts
     """
 
-    data = load(filename, ids=True, **kwargs)
+    show = ax is None
+
+    if data is None:
+        data = load(filename, ids=True, **kwargs)
 
     z, edges = np.histogram(data.ids,
                             bins=np.arange(-0.5, data.nx * data.ny + 0.5))
@@ -95,9 +103,10 @@ def image(filename, colormap="viridis", vmin=None, vmax=None, log=False,
 
     imv = ImageViewer(data.x[0, :], data.y[:, 0], z, filename=filename,
                       colormap=colormap, vmin=vmin, vmax=vmax, log=log,
-                      side_panels=side_panels, clab="Counts")
+                      side_panels=side_panels, clab="Counts", ax=ax)
 
-    if save is not None:
-        imv.fig.savefig(save, bbox_inches="tight")
-    else:
-        imv.fig.show()
+    if show:
+        if save is not None:
+            imv.fig.savefig(save, bbox_inches="tight")
+        else:
+            imv.fig.show()
