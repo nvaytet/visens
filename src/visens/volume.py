@@ -2,7 +2,8 @@ import numpy as np
 from .load import load
 
 
-def volume(filename, colormap="viridis", nbins=256, **kwargs):
+def volume(filename=None, data=None, colormap="viridis", nbins=256, save=None,
+           **kwargs):
     """
     Make a 3D volume rendering using ipyvolume
     """
@@ -13,7 +14,8 @@ def volume(filename, colormap="viridis", nbins=256, **kwargs):
         print("Volume rendering makes use of the ipyvolume package which was "
               "not found on this system. Install using pip install ipyvolume.")
 
-    data = load(filename, ids=True, tofs=True, **kwargs)
+    if data is None:
+        data = load(filename, ids=True, tofs=True, **kwargs)
 
     t = np.linspace(0.0, 7.2e4, nbins + 1)
     z, xe, ye = np.histogram2d(data.ids, data.tofs/1.0e3,
@@ -26,6 +28,9 @@ def volume(filename, colormap="viridis", nbins=256, **kwargs):
     ipv.pylab.xlabel("x [cm]")
     ipv.pylab.ylabel("y [cm]")
     ipv.pylab.zlabel("Tof [us]")
-    ipv.show()
+    if save is not None:
+        ipv.pylab.save(save)
+    else:
+        ipv.show()
 
     return
