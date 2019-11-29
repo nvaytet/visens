@@ -46,7 +46,7 @@ def load(filename, ids=False, tofs=False, entry="/", verbose=False,
                           "data": None,
                           "dtype": np.float64}
 
-    with h5py.File(filename, "r") as f:
+    with h5py.File(filename, "r", libver='latest', swmr=True) as f:
 
         contents = []
         f[entry].visit(contents.append)
