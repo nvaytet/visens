@@ -31,7 +31,12 @@ def load(filename, ids=False, tofs=False, entry="/", verbose=False,
               "y": {"pattern": ["/y_pixel_offset"],
                     "entry": None,
                     "data": None,
-                    "dtype": np.float64}}
+                    "dtype": np.float64},
+              "title":{"pattern": ["/title"],
+                       "entry": None,
+                       "data": None,
+                       "dtype": str}
+              }
 
     if ids:
         fields["ids"] = {"pattern": ["/event_data/event_id",

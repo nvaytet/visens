@@ -17,10 +17,11 @@ def preview(filename=None, data=None, save=None, log=False):
     fig, ax = plt.subplots(2, 2, figsize=(12, 9))
     fig.suptitle(filename.split("/")[-1])
     tofs = data.tofs / 1.0e3
-    header = ("Number of events: {} - "
+    header = ("Title: {}\nNumber of events: {} - "
               "Min Tof: {} us - "
-              "Max Tof: {} us".format(len(tofs), np.min(tofs), np.max(tofs)))
-    fig.text(0.5, 0.92, header, ha="center", fontsize=11)
+              "Max Tof: {} us".format(data.title, len(tofs), np.min(tofs),
+                                      np.max(tofs)))
+    fig.text(0.5, 0.93, header, ha="center", va="center", fontsize=11)
 
     tof(data=data, ax=ax[0][0])
     x_vs_tof(data=data, ax=ax[0][1], log=log)
