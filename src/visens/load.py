@@ -16,7 +16,7 @@ class NxsData:
 
 
 def load(filename, ids=False, tofs=False, entry="/", verbose=False,
-         convert_ids=True):
+         convert_ids=False):
     """
     Load a hdf/nxs file and return required information.
     Note that the patterns are listed in order of preference,

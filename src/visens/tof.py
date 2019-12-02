@@ -25,11 +25,16 @@ def tof(filename=None, data=None, xmin=None, xmax=None, logx=False, logy=False,
     else:
         show = False
 
+    ax.grid(True, color="lightgray", linestyle="dotted")
+    ax.set_axisbelow(True)
     if logx or logxy:
         ax.set_xscale("log", nonposx='clip')
     if logy or logxy:
         ax.set_yscale("log", nonposy='clip')
-    ax.hist(tofs, bins=np.linspace(xmin, xmax, nbins + 1))
+    y, x = np.histogram(tofs, bins=np.linspace(xmin, xmax, nbins + 1))
+    y = np.concatenate(([0], y))
+    ax.step(x, y)
+    ax.fill_between(x, y, step="pre", alpha=0.6)
     ax.set_xlabel("Time-of-flight [microseconds]")
     ax.set_ylabel("Counts")
     if filename is not None:

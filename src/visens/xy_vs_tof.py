@@ -33,10 +33,12 @@ def xy_vs_tof(filename=None, data=None, colormap="viridis", vmin=None,
 
     if axis == "x":
         extent = [t[0], t[-1], data.x[0, 0], data.x[0, -1]]
+        y = data.x[0, :]
     elif axis == "y":
         extent = [t[0], t[-1], data.y[0, 0], data.y[-1, 0]]
+        y = data.y[:, 0]
 
-    imv = ImageViewer(data.x[0, :], data.y[:, 0], z, filename=filename,
+    imv = ImageViewer(0.5 * (t[:-1] + t[1:]), y, z, filename=filename,
                       colormap=colormap, vmin=vmin, vmax=vmax, log=log,
                       side_panels=side_panels, clab="Counts", ax=ax,
                       xlabel="Time-of-flight [microseconds]",
@@ -48,7 +50,6 @@ def xy_vs_tof(filename=None, data=None, colormap="viridis", vmin=None,
             imv.fig.savefig(save, bbox_inches="tight")
         else:
             imv.fig.show()
-
 
 
 def x_vs_tof(filename=None, data=None, colormap="viridis", vmin=None,

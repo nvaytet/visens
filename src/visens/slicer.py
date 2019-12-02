@@ -16,7 +16,8 @@ class Slicer(object):
         # Use ImageViewer class
         self.imv = ImageViewer(x, y, z[:, :, self.ind], filename=filename,
                       colormap=colormap, vmin=vmin, vmax=vmax, log=log,
-                      side_panels=side_panels, clab=clab, imstart=0.12)
+                      side_panels=side_panels, clab=clab,
+                      xlabel="x position [m]", ylabel="y position [m]")
 
         self.x = x
         self.y = y
