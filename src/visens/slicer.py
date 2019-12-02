@@ -2,7 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 from .load import load
-from .image import ImageViewer
+from .imviewer import ImageViewer
+
 
 class Slicer(object):
 
