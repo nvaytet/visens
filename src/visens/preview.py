@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from datetime import timedelta
 from .load import load
 from .image import image
 from .tof import tof
@@ -12,7 +13,8 @@ def preview(filename=None, data=None, save=None, log=False, layout="2x2"):
     """
 
     if data is None:
-        data = load(filename, ids=True, tofs=True, convert_ids=False)
+        data = load(filename, ids=True, tofs=True, pulsetimes=True,
+                    convert_ids=False)
 
     adjust = {"right": 0.85}
 
@@ -52,11 +54,14 @@ def preview(filename=None, data=None, save=None, log=False, layout="2x2"):
     if len(title) > title_max_length:
         title = title[:title_max_length] + "..."
     tofs = data.tofs / 1.0e3
+    runtime = "{}".format(str(timedelta(
+        seconds=(data.pulsetimes[-1] - data.pulsetimes[0]) / 1.0e9)))
+    runtime = runtime.replace(":", "h", 1).replace(":", "m", 1)
     header = (r"$\bf{" + filename.split("/")[-1].replace("_", "\\_") + "}$\n" +
               "Title: {}\nNumber of events: {}\n"
-              "Min Tof: {} [microseconds]\n"
-              "Max Tof: {} [microseconds]".format(
-                title, len(tofs), np.min(tofs), np.max(tofs)))
+              "Min - Max Tof: {} - {} \u03BCs\n"
+              "Run time: {}s".format(
+                title, len(tofs), np.min(tofs), np.max(tofs), runtime))
     ax_list[0].text(-0.1, 1.05, header, ha="left", va="bottom", fontsize=10,
                     bbox=dict(facecolor="none", edgecolor="grey",
                               boxstyle="round"),

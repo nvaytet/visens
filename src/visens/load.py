@@ -15,8 +15,8 @@ class NxsData:
         return
 
 
-def load(filename, ids=False, tofs=False, entry="/", verbose=False,
-         convert_ids=False):
+def load(filename, ids=False, tofs=False, pulsetimes=False, entry="/",
+         verbose=False, convert_ids=False):
     """
     Load a hdf/nxs file and return required information.
     Note that the patterns are listed in order of preference,
@@ -50,6 +50,13 @@ def load(filename, ids=False, tofs=False, entry="/", verbose=False,
                           "entry": None,
                           "data": None,
                           "dtype": np.float64}
+
+    if pulsetimes:
+        fields["pulsetimes"] = {"pattern": ["/event_data/event_time_zero",
+                                            "/raw_event_data/event_time_zero"],
+                                "entry": None,
+                                "data": None,
+                                "dtype": np.float64}
 
     with h5py.File(filename, "r", libver='latest', swmr=True) as f:
 
