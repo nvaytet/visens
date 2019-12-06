@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="visens",
-    version="0.1.5",
+    version="0.1.6",
     author="Neil Vaytet",
     author_email="neil.vaytet@esss.se",
     description="VISualization for Ess Neutron Science",
