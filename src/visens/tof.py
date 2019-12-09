@@ -35,7 +35,7 @@ def tof(filename=None, data=None, xmin=None, xmax=None, logx=False, logy=False,
     y = np.concatenate(([0], y))
     ax.step(x, y)
     ax.fill_between(x, y, step="pre", alpha=0.6)
-    ax.set_xlabel("Time-of-flight [microseconds]")
+    ax.set_xlabel("Time-of-flight [\u03BCs]")
     ax.set_ylabel("Counts")
     if filename is not None:
         ax.set_title(filename.split("/")[-1])

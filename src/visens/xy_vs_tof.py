@@ -41,7 +41,7 @@ def xy_vs_tof(filename=None, data=None, colormap="viridis", vmin=None,
     imv = ImageViewer(0.5 * (t[:-1] + t[1:]), y, z, filename=filename,
                       colormap=colormap, vmin=vmin, vmax=vmax, log=log,
                       side_panels=side_panels, clab="Counts", ax=ax,
-                      xlabel="Time-of-flight [microseconds]",
+                      xlabel="Time-of-flight [\u03BCs]",
                       ylabel="{} position [m]".format(axis),
                       extent=extent)
 
