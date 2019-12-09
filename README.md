@@ -1,4 +1,4 @@
-# VISENS
+![image.png](https://github.com/nvaytet/visens/raw/master/docs/images/logo.png)
 
 **VIS**ualization for **E**SS **N**eutron **S**cience
 
